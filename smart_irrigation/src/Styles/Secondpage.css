@@ -1,0 +1,112 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", "Montserrat", sans-serif;
+  }
+  
+  body, html {
+    width: 100%;
+    height: 100%;
+  }
+  
+  body {
+    background-color: navajowhite;
+  }
+  
+  .container {
+    width: 100%;
+    height: 100%;
+    background-color: #2c3e50;
+    padding-top: 2rem;
+  }
+  .container .top {
+    margin-left: 14rem;
+    width: 70%;
+    height: 40%;
+    background-color: #34495e;
+    display: flex;
+    padding: 2rem;
+    gap: 1.5rem;
+  }
+  .container .top .box1, .container .top .box2 {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    padding: 1.5rem;
+    transition: transform 0.3s ease;
+  }
+  .container .top .box1:hover, .container .top .box2:hover {
+    transform: translateY(-5px);
+  }
+  .container .top .box1 h2, .container .top .box2 h2 {
+    margin-bottom: 1.5rem;
+    font-size: 2.2rem;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 700;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  .container .top .box1 p, .container .top .box2 p {
+    margin-bottom: 1rem;
+    font-size: 1.4rem;
+    color: rgba(255, 255, 255, 0.95);
+    font-weight: 300;
+    letter-spacing: 0.5px;
+  }
+  .container .top .box1 {
+    background-color: #3498db;
+    background-image: linear-gradient(135deg, #3498db, #2980b9);
+  }
+  .container .top .box2 {
+    background-color: #e74c3c;
+    background-image: linear-gradient(135deg, #e74c3c, #c0392b);
+  }
+  .container .bot {
+    width: 100%;
+    background-color: #afc6de;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .container .bot h2 {
+    margin-bottom: 1.5rem;
+    font-size: 2.2rem;
+    color: #34495e;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 700;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  .container .bot .soil {
+    width: 80%;
+    background-color: #2c3e50;
+    background-image: linear-gradient(135deg, #2c3e50, #1a252f);
+    margin-bottom: 1rem;
+    padding: 2rem 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: transform 0.3s ease;
+  }
+  .container .bot .soil:hover {
+    transform: translateX(5px);
+  }
+  .container .bot .soil p {
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.95);
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    margin: 0;
+  }

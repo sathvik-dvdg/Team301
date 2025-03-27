@@ -1,0 +1,60 @@
+.login{
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#header {
+    background-color: #8eb50b;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    border-radius: 10px;
+    font-size: 24px;
+    width: 50%;
+    margin: 0 auto;
+    
+}
+.login_form{
+    margin: 50px;
+    padding: 20px;
+    border:2px solid black;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items:center ;
+    width: 500px;
+}
+
+.submit{
+    display: flex; /* Enables Flexbox layout */
+    gap: 30px;
+}
+
+.login_form input, .signup_form input {
+    margin-bottom: 15px; /* Adds space between inputs */
+    padding: 10px; /* Internal spacing for better usability */
+    border: 1px solid #ccc; /* Subtle border for inputs */
+    border-radius: 5px; /* Smooth corners */
+    width: 100%; /* Stretch input to match form's width */
+    box-sizing: border-box; /* Prevents padding from increasing width */
+}
+
+.signup_form {
+    margin: 50px;
+    padding: 20px;
+    border: 2px solid black; /* Adds a black border around the form */
+    border-radius: 10px; /* Smoothens the corners of the border */
+    display: flex;
+    flex-direction: column; /* Stacks the form elements vertically */
+    justify-content: center;
+    align-items: center;
+    width: 500px; /* Sets a fixed width for the form */
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); /* Adds a subtle shadow for a polished look */
+}
+
+
+
