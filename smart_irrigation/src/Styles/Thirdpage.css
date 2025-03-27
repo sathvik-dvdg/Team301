@@ -6,7 +6,6 @@ body {
     background-color: #131313;
 }
 
-
 .topbar {
     background-color: #8EB50B;
     color: white;
@@ -107,89 +106,62 @@ footer {
 .footer-container {
     display: flex;
     justify-content: space-between;
-    /* Distribute sections evenly */
     align-items: flex-start;
-    /* Align items at the top */
     flex-wrap: wrap;
-    /* Allow wrapping for smaller screens */
     max-width: 1200px;
     margin: auto;
     gap: 20px;
-    /* Add spacing between sections */
     padding: 20px 0;
-    /* Add padding to the top and bottom */
 }
 
 .footer-section {
     flex: 1;
-    /* Ensure all sections take equal width */
     min-width: 300px;
-    /* Prevent sections from becoming too narrow */
     margin-bottom: 20px;
     display: flex;
     flex-direction: column;
-    /* Stack content vertically */
     justify-content: flex-start;
-    /* Align content to the top */
 }
 
 .footer-section.brand h2 {
     color: #8EB50B;
-    /* Set the heading color to green */
     font-size: 28px;
-    /* Slightly larger font size for emphasis */
     margin-bottom: 10px;
-    /* Add spacing below the heading */
 }
 
 .footer-section.brand p {
     margin-top: 0;
-    /* Remove extra spacing above the paragraph */
     color: #ffffff;
-    /* Ensure text is readable */
     line-height: 1.6;
-    /* Adjust line height for better readability */
     font-size: 16px;
-    /* Slightly smaller font size for better balance */
 }
 
 .footer-section.contact {
     text-align: right;
-    /* Align the content to the right */
     padding: 20px;
     line-height: 1.6;
-    /* Adjust line height for better readability */
 }
 
 .footer-section.contact h3 {
     font-size: 24px;
-    /* Slightly larger font size for emphasis */
     color: #8EB50B;
-    /* Highlight the heading */
     margin-bottom: 10px;
-    /* Add spacing below the heading */
 }
 
 .footer-section.contact p {
     margin: 5px 0;
-    /* Add spacing between paragraphs */
     color: #ffffff;
-    /* Ensure text is readable */
     font-size: 16px;
-    /* Match font size with the brand description */
 }
 
 .footer-section.contact a {
     color: #8EB50B;
-    /* Highlight email link */
     text-decoration: none;
     font-weight: bold;
-    /* Make the email link stand out */
 }
 
 .footer-section.contact a:hover {
     text-decoration: underline;
-    /* Add underline on hover for better UX */
 }
 
 .footer-bottom {
