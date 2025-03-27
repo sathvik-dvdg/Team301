@@ -4,13 +4,20 @@ import "../styles/Firstpage.css";
 const FirstPage = () => {
   const navigate = useNavigate();
 
+  const scrollToContact = () => {
+    document.querySelector('.footer-section.contact').scrollIntoView({
+      behavior: 'smooth'
+    });
+  };
+
   return (
     <div>
       <header className="topbar">
-        <div className="leftbox">Dashboard</div>
+        <div className="leftbox" onClick={scrollToContact}>Contact</div>
         <button className="rightbox" onClick={() => navigate("/login")}>
           Login
-        </button>        <h1>Smart Irrigation System</h1>
+        </button>
+        <h1>Smart Irrigation System</h1>
       </header>
       <main>
         <div className="hero">
@@ -26,13 +33,13 @@ const FirstPage = () => {
           <input type="text" placeholder="Enter Moisture (in %)" />
           <input type="text" placeholder="Enter Nitrogen level (kg/ha)" />
           <input type="text" placeholder="Enter Potassium (kg/ha)" />
-          <button  onClick={() => navigate("/second")}>
-          View Report
-        </button>
+          <button onClick={() => navigate("/second")}>
+            View Report
+          </button>
         </form>
-        
+
         {/* New Report Button */}
-        
+
         <footer>
           <div className="footer-container">
             <div className="footer-section brand">
