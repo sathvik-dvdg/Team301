@@ -1,0 +1,113 @@
+import json
+import boto3
+from datetime import datetime
+
+# Initialize DynamoDB
+dynamodb = boto3.resource("dynamodb")
+table = dynamodb.Table("SoilData")  # Ensure this table exists
+
+# Crop conditions with pH, Nitrogen (N), Phosphorus (P), Potassium (K), moisture, temperature
+CROP_CONDITIONS = {
+    "Wheat": {"pH": (6.0, 7.5), "N": (50, 120), "P": (25, 60), "K": (30, 90), "moisture": (20, 50), "temperature": (15, 30)},
+    "Rice": {"pH": (5.5, 7.0), "N": (80, 150), "P": (30, 60), "K": (40, 100), "moisture": (30, 70), "temperature": (25, 35)},
+    "Corn": {"pH": (5.8, 7.5), "N": (100, 180), "P": (40, 80), "K": (50, 120), "moisture": (20, 50), "temperature": (20, 30)},
+    "Potato": {"pH": (5.0, 6.5), "N": (80, 150), "P": (40, 80), "K": (90, 200), "moisture": (10, 40), "temperature": (15, 25)},
+    "Sugarcane": {"pH": (6.0, 8.0), "N": (120, 250), "P": (60, 120), "K": (100, 250), "moisture": (40, 80), "temperature": (21, 35)},
+    "Soybean": {"pH": (6.0, 7.5), "N": (20, 60), "P": (40, 80), "K": (40, 80), "moisture": (25, 50), "temperature": (20, 30)},
+    "Cotton": {"pH": (5.5, 7.5), "N": (80, 150), "P": (40, 90), "K": (60, 120), "moisture": (20, 60), "temperature": (21, 35)},
+    "Mustard": {"pH": (6.0, 7.5), "N": (50, 100), "P": (30, 60), "K": (40, 80), "moisture": (15, 40), "temperature": (15, 25)},
+    "Peanut": {"pH": (5.8, 7.0), "N": (10, 40), "P": (20, 60), "K": (40, 80), "moisture": (15, 40), "temperature": (20, 30)},
+    "Chickpea (Gram)": {"pH": (6.0, 7.5), "N": (20, 60), "P": (30, 70), "K": (30, 80), "moisture": (10, 35), "temperature": (15, 25)},
+    "Lentil": {"pH": (5.5, 7.0), "N": (20, 50), "P": (30, 60), "K": (40, 80), "moisture": (10, 35), "temperature": (15, 25)},
+    "Turmeric": {"pH": (5.5, 7.5), "N": (50, 100), "P": (40, 80), "K": (60, 120), "moisture": (40, 80), "temperature": (20, 35)},
+    "Black Gram (Urad)": {"pH": (6.0, 7.5), "N": (30, 70), "P": (30, 60), "K": (40, 80), "moisture": (20, 50), "temperature": (25, 35)},
+    "Green Gram (Moong)": {"pH": (6.0, 7.5), "N": (20, 60), "P": (30, 70), "K": (40, 80), "moisture": (20, 50), "temperature": (25, 35)},
+    "Barley": {"pH": (6.0, 7.5), "N": (50, 100), "P": (30, 60), "K": (40, 80), "moisture": (15, 40), "temperature": (10, 25)},
+    "Tomato": {"pH": (5.5, 7.0), "N": (100, 200), "P": (50, 100), "K": (60, 150), "moisture": (40, 70), "temperature": (18, 30)},
+    "Onion": {"pH": (6.0, 7.5), "N": (50, 120), "P": (30, 70), "K": (40, 100), "moisture": (15, 50), "temperature": (12, 25)},
+    "Garlic": {"pH": (5.5, 7.0), "N": (40, 80), "P": (30, 70), "K": (40, 90), "moisture": (20, 50), "temperature": (12, 25)},
+    "Chili": {"pH": (5.5, 7.5), "N": (80, 150), "P": (40, 90), "K": (60, 120), "moisture": (20, 50), "temperature": (20, 35)},
+    "Coriander": {"pH": (6.0, 7.5), "N": (20, 50), "P": (30, 60), "K": (40, 80), "moisture": (15, 40), "temperature": (10, 25)},
+    "Carrot": {"pH": (5.5, 7.0), "N": (60, 120), "P": (30, 70), "K": (50, 100), "moisture": (30, 60), "temperature": (10, 20)},
+    "Brinjal (Eggplant)": {"pH": (5.5, 7.5), "N": (100, 200), "P": (50, 100), "K": (60, 150), "moisture": (40, 70), "temperature": (20, 35)},
+    "Cabbage": {"pH": (6.0, 7.5), "N": (50, 120), "P": (40, 90), "K": (60, 120), "moisture": (30, 60), "temperature": (10, 25)},
+    "Cauliflower": {"pH": (6.0, 7.5), "N": (50, 120), "P": (40, 90), "K": (60, 120), "moisture": (30, 60), "temperature": (15, 25)}
+}
+
+def lambda_handler(event, context):
+    try:
+        # Ensure the request contains a valid body
+        if "body" not in event or not event["body"]:
+            raise ValueError("Missing request body")
+
+        # Parse incoming JSON request
+        data = json.loads(event["body"])
+
+        # Validate required fields
+        required_fields = ["latitude", "longitude", "pH", "moisture", "nitrogen", "phosphorus", "potassium", "temperature"]
+        for field in required_fields:
+            if field not in data:
+                raise ValueError(f"Missing required field: {field}")
+
+        # Extract parameters from request
+        lat = data["latitude"]
+        lon = data["longitude"]
+        pH = float(data["pH"])
+        moisture = float(data["moisture"])
+        nitrogen = float(data["nitrogen"])
+        phosphorus = float(data["phosphorus"])
+        potassium = float(data["potassium"])
+        temperature = float(data["temperature"])  # Can be fetched from an external weather API
+
+        # Store data in DynamoDB
+        location_id = f"{lat}_{lon}"
+        timestamp = datetime.utcnow().isoformat()
+
+        table.put_item(Item={
+            "location_id": location_id,
+            "timestamp": timestamp,
+            "pH": pH,
+            "moisture": moisture,
+            "nitrogen": nitrogen,
+            "phosphorus": phosphorus,
+            "potassium": potassium,
+            "temperature": temperature
+        })
+
+        # Determine suitable crops based on soil conditions
+        suitable_crops = []
+        for crop, conditions in CROP_CONDITIONS.items():
+            if (conditions["pH"][0] <= pH <= conditions["pH"][1] and
+                conditions["moisture"][0] <= moisture <= conditions["moisture"][1] and
+                conditions["temperature"][0] <= temperature <= conditions["temperature"][1] and
+                conditions["N"][0] <= nitrogen <= conditions["N"][1] and
+                conditions["P"][0] <= phosphorus <= conditions["P"][1] and
+                conditions["K"][0] <= potassium <= conditions["K"][1]):
+                suitable_crops.append(crop)
+
+        # Create success response
+        response = {
+            "status": "connected",
+            "connection_id": context.aws_request_id if context else "N/A",
+            "timestamp": timestamp,
+            "message": "Soil data stored successfully",
+            "suitable_crops": suitable_crops,
+            "request_id": context.aws_request_id if context else "N/A"
+        }
+
+        return {
+            "statusCode": 200,
+            "body": json.dumps(response)
+        }
+
+    except ValueError as ve:
+        return {
+            "statusCode": 400,
+            "body": json.dumps({"error": str(ve), "status": "failed"})
+        }
+    
+    except Exception as e:
+        return {
+            "statusCode": 500,
+            "body": json.dumps({"error": str(e), "status": "failed"})
+        }
