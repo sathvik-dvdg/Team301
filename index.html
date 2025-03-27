@@ -3,133 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Temperature Trend Tracker</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Chart.js for graphs -->
-</head>
-<body class="bg-gray-100 p-6 text-center">
-    <h1 class="text-2xl font-bold text-green-700">City Temperature Tracker</h1>
-
-    <input id="city-input" type="text" placeholder="Enter a city name" 
-           class="mt-4 p-2 border border-gray-300 rounded-lg">
-    <button onclick="getWeatherData()" 
-            class="ml-2 bg-green-500 text-white p-2 rounded-lg">Get Data</button>
-
-    <p class="mt-4">🌍 Coordinates → Lat: <span id="latitude">-</span>, Lon: <span id="longitude">-</span></p>
-    <p class="text-lg mt-4">🌡️ Current Temperature in <span id="city">-</span>: 
-        <span id="current-temp">-</span>°C</p>
-
-    <h2 class="text-xl font-semibold mt-6 text-blue-700">📊 Historical Temperature Trend (Last 7 Days)</h2>
-    <p id="historical-temp" class="mt-2 text-gray-700">Loading...</p>
+    <title>Smart Irrigation System</title>
+    <link rel="stylesheet" href="index.css">
     
-    <h2 class="text-lg font-semibold mt-4 text-red-600">📈 Average Temperature: <span id="average-temp">-</span>°C</h2>
-
-    <canvas id="temperatureChart" class="mt-6"></canvas> <!-- Chart -->
-
-    <script>
-        const weatherApiKey = "39bdad2b3bfa48c387993239252703";  // Replace with your WeatherAPI key
-
-        function getWeatherData() {
-            const city = document.getElementById("city-input").value;
-            const geocodeUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${city}&count=1&format=json`;
-
-            fetch(geocodeUrl)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.results && data.results.length > 0) {
-                        const lat = data.results[0].latitude;
-                        const lon = data.results[0].longitude;
-                        document.getElementById("latitude").textContent = lat;
-                        document.getElementById("longitude").textContent = lon;
-                        
-                        // Fetch current weather from WeatherAPI
-                        const currentWeatherUrl = `https://api.weatherapi.com/v1/current.json?key=${weatherApiKey}&q=${lat},${lon}`;
-
-                        fetch(currentWeatherUrl)
-                            .then(response => response.json())
-                            .then(weatherData => {
-                                document.getElementById("city").textContent = weatherData.location.name;
-                                document.getElementById("current-temp").textContent = weatherData.current.temp_c;
-                            })
-                            .catch(error => {
-                                console.error("Error fetching WeatherAPI data:", error);
-                                document.getElementById("current-temp").textContent = "Error ❌";
-                            });
-
-                        // Fetch historical temperature data from Open-Meteo
-                        const today = new Date();
-                        const startDate = new Date();
-                        startDate.setDate(today.getDate() - 30);  // Past 7 days
-
-                        const formattedStartDate = startDate.toISOString().split("T")[0];
-                        const formattedEndDate = today.toISOString().split("T")[0];
-
-                        const historicalWeatherUrl = `https://archive-api.open-meteo.com/v1/archive?latitude=${lat}&longitude=${lon}&start_date=${formattedStartDate}&end_date=${formattedEndDate}&daily=temperature_2m_max&timezone=auto`;
-
-                        return fetch(historicalWeatherUrl)
-                            .then(response => response.json())
-                            .then(data => {
-                                if (!data.daily || !data.daily.temperature_2m_max) {
-                                    throw new Error("No historical temperature data found ❌");
-                                }
-
-                                const temperatures = data.daily.temperature_2m_max;
-                                const timestamps = data.daily.time; // Dates already formatted correctly
-
-                                // Update text display of historical temperatures
-                                let historicalText = timestamps.map((date, index) => 
-                                    `📅 ${date}: 🌡️ ${temperatures[index]}°C`).join("<br>");
-                                document.getElementById("historical-temp").innerHTML = historicalText;
-
-                                // Calculate and display average temperature
-                                const avgTemp = calculateAverage(temperatures);
-                                document.getElementById("average-temp").textContent = avgTemp.toFixed(2);
-
-                                renderChart(timestamps, temperatures);
-                            });
-                    } else {
-                        throw new Error("City not found ❌");
-                    }
-                })
-                .catch(error => {
-                    console.error("Error:", error);
-                    alert(error.message);
-                });
-        }
-
-        function calculateAverage(data) {
-            const sum = data.reduce((acc, temp) => acc + temp, 0);
-            return sum / data.length;
-        }
-
-        function renderChart(labels, data) {
-            const ctx = document.getElementById("temperatureChart").getContext("2d");
-
-            if (window.temperatureChart) {
-                window.temperatureChart.destroy(); // Destroy old chart before creating a new one
-            }
-
-            window.temperatureChart = new Chart(ctx, {
-                type: "line",
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: "Max Temperature (°C)",
-                        data: data,
-                        borderColor: "rgb(34, 197, 94)", // Green
-                        fill: false,
-                        tension: 0.3
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        x: { display: true, title: { display: true, text: "Date" } },
-                        y: { display: true, title: { display: true, text: "Temperature (°C)" } }
-                    }
-                }
-            });
-        }
-    </script>
+</head>
+<body>
+    <header class="topbar">
+        <div class="leftbox">Contact</div>
+        <div class="rightbox">Login</div>
+        <h1>Smart Irrigation System</h1>
+    </header>
+    <main>
+        <div class="hero">
+            <h2>
+                Get Complete Agricultural Report – Fertility, Rainfall, <br>
+                Drought Risk & More! 🌾 in
+            </h2>
+            <span class="highlight">YOUR CITY</span>
+        </div>
+        <form>
+            <input type="text" placeholder="Enter your city" />
+            <input type="text" placeholder="Enter type of soil" />
+            <input type="text" placeholder="Enter Ph Level" />
+            <button type="submit">Get Report</button>
+        </form>
+        <footer>
+            <div class="footer-container">
+                <div class="footer-section brand">
+                    <h2>SmartIrrigate</h2>
+                    <p>Get real-time agricultural insights and reports for your city.</p>
+                </div>
+                <div class="footer-section contact">
+                    <h3>Contact Info</h3>
+                    <p><strong>Office Address:</strong> 123 Greenfield, NY 36524</p>
+                    <p><strong>Customer Service:</strong> +01 1234567890</p>
+                    <p><strong>Email:</strong> contact@smartirrigate.com</p>
+                </div>
+                <div class="footer-section links">
+                    <h3>Navigation</h3>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Services</a></li>
+                        <li><a href="#">Location</a></li>
+                        <li><a href="#">Features</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section social">
+                    <h3>Follow Us</h3>
+                    <div class="social-icons">
+                        <a href="#"><img src="facebook-icon.png" alt="Facebook"></a>
+                        <a href="#"><img src="twitter-icon.png" alt="Twitter"></a>
+                        <a href="#"><img src="linkedin-icon.png" alt="LinkedIn"></a>
+                        <a href="#"><img src="instagram-icon.png" alt="Instagram"></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2024 All Rights Reserved. Designed by HTML & CSS</p>
+            </div>
+        </footer>
+    </main>
 </body>
 </html>

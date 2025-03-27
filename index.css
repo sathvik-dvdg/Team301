@@ -1,0 +1,169 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap');
+
+        body {
+            margin: 0;
+            font-family: 'Montserrat', sans-serif;
+            background-color: #131313;
+        }
+
+        .topbar {
+            background-color: #8EB50B;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 20px;
+            height: 80px;
+            position: relative;
+        }
+
+        .topbar .leftbox {
+            margin-right: auto;
+        }
+
+        .topbar .rightbox {
+            margin-left: auto;
+        }
+
+        .topbar .leftbox, .topbar .rightbox {
+            background-color: #252525;
+            color: white;
+            padding: 15px 40px;
+            border-radius: 60px;
+            width: fit-content;
+        }
+
+        .topbar h1 {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            margin: 0;
+            font-size: 35px;
+            white-space: nowrap;
+        }
+
+        .hero {
+            text-align: center;
+            color: white;
+            margin-top: 100px;
+            font-size: 28px;
+            line-height: 1.5;
+        }
+
+        .highlight {
+            background-color: #ffffff;
+            color: #8eb50b;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #252525;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        input {
+            font-family: 'Montserrat', sans-serif;
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #8EB50B;
+            border-radius: 5px;
+            background-color: #ffffff;
+            color: rgb(0, 0, 0);
+            font-size: 16px;
+        }
+
+        input::placeholder {
+            font-family: 'Montserrat', sans-serif;
+            color: #9c9ca0;
+            text-align: left;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #ffffff;
+            box-shadow: 0 0 5px #8EB50B;
+        }
+
+        button {
+            font-family: 'Montserrat', sans-serif;
+            padding: 12px 20px;
+            background-color: #8EB50B;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #6e9e09;
+        }
+
+        footer {
+            background-color: #131313;
+            color: white;
+            padding: 40px 20px;
+        }
+
+        .footer-container {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .footer-section {
+            flex: 1;
+            min-width: 250px;
+            margin-bottom: 20px;
+        }
+
+        h2, h3 {
+            color: #8EB50B;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        ul li a {
+            color: white;
+            text-decoration: none;
+        }
+
+        ul li a:hover {
+            text-decoration: underline;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .social-icons img {
+            width: 30px;
+            height: 30px;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 10px;
+            border-top: 1px solid #8EB50B;
+            margin-top: 20px;
+        }
+    
