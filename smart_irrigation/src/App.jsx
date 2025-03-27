@@ -9,9 +9,9 @@ export default function App(){
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Signup />} />
+        <Route path="/" element={<FirstPage />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/first" element={<FirstPage />} />
+        <Route path="/signup" element={<Signup />} />
         <Route path="/second" element={<SecondPage />} />
       </Routes>
     </Router>

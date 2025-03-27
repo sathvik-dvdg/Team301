@@ -31,7 +31,7 @@ export default function Login() {
                 required
               />
 
-              <button type="button" onClick={() => navigate("/")}>
+              <button type="button" onClick={() => navigate("/signup")}>
                 Don't have an account? Sign Up
               </button>
 
