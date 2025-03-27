@@ -5,7 +5,7 @@ import Login from "./pages/Login";
 import FirstPage from "./pages/Firstpage";
 import SecondPage from "./pages/Secondpage";
 import ThirdPage from "./pages/Thirdpage";
-// import Dashboard from "./pages/Dashboard";
+import Dashboard from "./pages/Dashboard";
 
 export default function App() {
   return (
@@ -16,7 +16,7 @@ export default function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/second" element={<SecondPage />} />
         <Route path="/third" element={<ThirdPage />} />
-        {/* <Route path="/dashboard" element={<Dashboard />} /> */}
+        <Route path="/Dashboard" element={<Dashboard />} />
       </Routes>
     </Router>
   )

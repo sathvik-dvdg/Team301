@@ -1,0 +1,155 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+.dashboard-container {
+    font-family: 'Montserrat', sans-serif;
+    background: linear-gradient(to right, #0f0f0f, #1c1c1c);
+    color: white;
+    min-height: 100vh;
+    width: 100%;
+}
+
+.dashboard-topbar {
+    background: linear-gradient(135deg, #8EB50B, #6c8e07);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 20px;
+    width: 100%;
+    height: 70px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.dashboard-topbar h1 {
+    font-size: 22px;
+    font-weight: bold;
+    flex-grow: 1;
+    text-align: center;
+}
+
+.dashboard-home-button {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    background: black;
+    padding: 8px 15px;
+    border-radius: 80px;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.dashboard-home-button:hover {
+    background: rgba(0, 0, 0, 0.8);
+    transform: scale(1.05);
+}
+
+.dashboard-main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 900px;
+    margin: 90px auto 0;
+    padding: 20px;
+}
+
+.dashboard-card {
+    background: linear-gradient(135deg, #242424, #1b1b1b);
+    padding: 30px;
+    border-radius: 18px;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+}
+
+.dashboard-profile-img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: 0 auto 15px;
+    border: 4px solid transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #1e1e1e;
+    transition: border 0.3s ease;
+}
+
+.dashboard-profile-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.dashboard-profile-img:hover {
+    border: 4px solid #8EB50B;
+    box-shadow: 0 0 15px #8EB50B;
+}
+
+.dashboard-card h2 {
+    color: #8EB50B;
+    font-size: 24px;
+    margin-bottom: 12px;
+}
+
+.dashboard-info {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 14px;
+    margin: 10px 0;
+    border-radius: 10px;
+    font-size: 16px;
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #ddd;
+    transition: background 0.3s ease;
+}
+
+.dashboard-info:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.dashboard-info a {
+    color: #8EB50B;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.dashboard-info a:hover {
+    color: #A0D911;
+}
+
+.dashboard-button {
+    display: block;
+    padding: 14px;
+    margin-top: 18px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 17px;
+    text-align: center;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.dashboard-logout {
+    background: linear-gradient(135deg, #D32F2F, #B71C1C);
+    color: white;
+}
+
+.dashboard-logout:hover {
+    background: linear-gradient(135deg, #B71C1C, #D32F2F);
+    transform: scale(1.05);
+} 
