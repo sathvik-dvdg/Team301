@@ -65,6 +65,7 @@ export default function Secondpage() {
     }
   }, [formData]);
 
+
   const findRecommendedCrops = (soilData, temperature) => {
     return cropData
       .map(crop => {
