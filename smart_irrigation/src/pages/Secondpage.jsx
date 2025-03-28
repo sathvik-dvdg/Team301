@@ -7,32 +7,66 @@ export default function Secondpage() {
   const location = useLocation();
   const formData = location.state || {};
   const [recommendedCrops, setRecommendedCrops] = useState([]);
-  const [currentTemp, setCurrentTemp] = useState(null);
-  const [avgTemp, setAvgTemp] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [weatherData, setWeatherData] = useState({
+    currentTemp: null,
+    avgTemp: null,
+    loading: true,
+    error: null
+  });
 
   useEffect(() => {
-    // Fetch weather data and calculate recommendations
     const fetchWeatherData = async () => {
       try {
-        // For now, using example temperature
-        setCurrentTemp(25);
-        setAvgTemp(23);
-        
-        // Calculate recommendations
-        const recommendations = findRecommendedCrops(formData);
+        const API_KEY = '2ea24c536580475a98731102252803';
+        const city = formData.location;
+
+        // Fetch current weather and forecast in one call
+        const response = await fetch(
+          `https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${city}&days=5&aqi=no`
+        );
+        const data = await response.json();
+
+        if (data.error) {
+          throw new Error(data.error.message || 'Failed to fetch weather data');
+        }
+
+        // Get current temperature
+        const currentTemp = data.current.temp_c;
+
+        // Calculate average temperature from forecast
+        const avgTemperature = data.forecast.forecastday.reduce((sum, day) => {
+          return sum + day.day.avgtemp_c;
+        }, 0) / data.forecast.forecastday.length;
+
+        setWeatherData({
+          currentTemp: Math.round(currentTemp),
+          avgTemp: Math.round(avgTemperature),
+          loading: false,
+          error: null
+        });
+
+        // Calculate recommendations with actual temperature
+        const recommendations = findRecommendedCrops(formData, currentTemp);
         setRecommendedCrops(recommendations);
+
       } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setLoading(false);
+        console.error("Error fetching weather data:", error);
+        setWeatherData({
+          currentTemp: null,
+          avgTemp: null,
+          loading: false,
+          error: `Failed to fetch weather data: ${error.message}`
+        });
       }
     };
 
-    fetchWeatherData();
+    if (formData.location) {
+      fetchWeatherData();
+    }
   }, [formData]);
 
-  const findRecommendedCrops = (soilData) => {
+
+  const findRecommendedCrops = (soilData, temperature) => {
     return cropData
       .map(crop => {
         const moistureMatch = isInRange(soilData.moisture, crop.moisture.min, crop.moisture.max);
@@ -40,7 +74,7 @@ export default function Secondpage() {
         const nitrogenMatch = isInRange(soilData.nitrogen, crop.nitrogen.min, crop.nitrogen.max);
         const phosphorousMatch = isInRange(soilData.phosphorous, crop.phosphorous.min, crop.phosphorous.max);
         const potassiumMatch = isInRange(soilData.potassium, crop.potassium.min, crop.potassium.max);
-        const temperatureMatch = isInRange(currentTemp, crop.temperature.min, crop.temperature.max);
+        const temperatureMatch = isInRange(temperature, crop.temperature.min, crop.temperature.max);
 
         const accuracy = (
           (moistureMatch + phMatch + nitrogenMatch + phosphorousMatch + potassiumMatch + temperatureMatch) / 6
@@ -48,12 +82,12 @@ export default function Secondpage() {
 
         return {
           ...crop,
-          accuracy
+          accuracy: Math.round(accuracy)
         };
       })
-      .filter(crop => crop.accuracy >= 30) // Filter out crops with accuracy less than 30%
+      .filter(crop => crop.accuracy >= 30)
       .sort((a, b) => b.accuracy - a.accuracy)
-      .slice(0, 3); // Get top 3 recommendations
+      .slice(0, 3);
   };
 
   const isInRange = (value, min, max) => {
@@ -66,15 +100,24 @@ export default function Secondpage() {
       <div className="container">
         <div className="top">
           <div className="box1">
-            <h2>Coordinates</h2>
+            <h2>Location Details</h2>
             <p>Location: {formData.location || "Not specified"}</p>
           </div>
           <div className="box2">
             <h2>Temperature</h2>
-            <p>Current Temperature: {currentTemp}°C</p>
-            <p>Average Temperature: {avgTemp}°C</p>
+            {weatherData.loading ? (
+              <p>Loading temperature data...</p>
+            ) : weatherData.error ? (
+              <p className="error">{weatherData.error}</p>
+            ) : (
+              <>
+                <p>Current Temperature: {weatherData.currentTemp}°C</p>
+                <p> Average: {weatherData.avgTemp}°C</p>
+              </>
+            )}
           </div>
         </div>
+
         <div className="bot">
           <h2>Soil Information</h2>
           <div className="soil">
@@ -98,10 +141,10 @@ export default function Secondpage() {
             <p>{formData.potassium} kg/ha</p>
           </div>
         </div>
-        
+
         <div className="recommendations">
           <h2>Best Crops for Your Soil</h2>
-          {loading ? (
+          {weatherData.loading ? (
             <div className="loading">Loading recommendations...</div>
           ) : recommendedCrops.length > 0 ? (
             <div className="crop-list">
@@ -119,12 +162,13 @@ export default function Secondpage() {
                       <li>Phosphorous: {crop.phosphorous.min} - {crop.phosphorous.max} kg/ha</li>
                       <li>Potassium: {crop.potassium.min} - {crop.potassium.max} kg/ha</li>
                     </ul>
+                    {/* <p className="accuracy">Match Accuracy: {crop.accuracy}%</p> */}
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-            <div className="no-crops">No crop recommendations available for the given soil conditions.</div>
+            <div className="no-crops">No crop recommendations available for the given conditions.</div>
           )}
         </div>
       </div>

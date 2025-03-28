@@ -22,7 +22,7 @@ const FirstPage = () => {
 
   const validateForm = () => {
     const newErrors = {};
-    
+
     if (!formData.location.trim()) {
       newErrors.location = "Location is required";
     }
@@ -229,7 +229,7 @@ const FirstPage = () => {
             </div>
           </div>
           <div className="footer-bottom">
-            <p>© 2024 All Rights Reserved. Designed by HTML & CSS</p>
+            <p>© 2024 All Rights Reserved. Designed by Team 301</p>
           </div>
         </footer>
       </main>
