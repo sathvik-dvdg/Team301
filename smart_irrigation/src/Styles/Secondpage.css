@@ -123,34 +123,33 @@ html {
 }
 
 .container .bot {
-  width: 100%;
-  background: linear-gradient(145deg, #afc6de, #95b3d4);
+  width: 85%;
+  margin: 3rem auto;
+  background: rgba(52, 73, 94, 0.85);
+  backdrop-filter: blur(15px);
   padding: 3rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 3rem;
   border-radius: 25px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .container .bot h2 {
   margin-bottom: 2rem;
   font-size: 2.6rem;
-  color: #2c3e50;
+  color: #fff;
   text-transform: uppercase;
   letter-spacing: 2px;
   font-weight: 800;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   text-align: center;
 }
 
 .container .bot .soil {
-  width: 85%;
   background: rgba(44, 62, 80, 0.9);
   backdrop-filter: blur(15px);
   margin-bottom: 1.8rem;
-  padding: 2.5rem;
-  border-radius: 20px;
+  padding: 2rem;
+  border-radius: 15px;
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
@@ -160,8 +159,7 @@ html {
 }
 
 .container .bot .soil:hover {
-  transform: translateX(5px) translateY(-2px);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+  transform: translateX(5px);
 }
 
 .container .bot .soil p {
@@ -171,4 +169,164 @@ html {
   letter-spacing: 0.5px;
   margin: 0;
   line-height: 1.6;
+}
+
+.recommendations {
+  width: 85%;
+  margin: 3rem auto;
+  background: rgba(52, 73, 94, 0.85);
+  backdrop-filter: blur(15px);
+  padding: 3rem;
+  border-radius: 25px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.recommendations h2 {
+  margin-bottom: 2rem;
+  font-size: 2.6rem;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-weight: 800;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+
+.crop-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.crop-card {
+  background: rgba(44, 62, 80, 0.9);
+  backdrop-filter: blur(15px);
+  border-radius: 15px;
+  padding: 2rem;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.4s ease;
+}
+
+.crop-card:hover {
+  transform: translateY(-5px);
+}
+
+.crop-card h3 {
+  color: #fff;
+  margin-bottom: 1rem;
+  font-size: 1.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.crop-card p {
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 1.5rem;
+  font-size: 1.2rem;
+  line-height: 1.6;
+}
+
+.crop-requirements {
+  background: rgba(52, 73, 94, 0.85);
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.crop-requirements p {
+  color: #fff;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  font-size: 1.4rem;
+}
+
+.crop-requirements ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.crop-requirements li {
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 0.8rem;
+  padding-left: 1.5rem;
+  position: relative;
+  font-size: 1.2rem;
+}
+
+.crop-requirements li:before {
+  content: "•";
+  color: #3498db;
+  position: absolute;
+  left: 0;
+  font-size: 1.4rem;
+}
+
+.no-crops {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.9);
+  padding: 2rem;
+  font-size: 1.4rem;
+  background: rgba(44, 62, 80, 0.9);
+  border-radius: 15px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Loading and Error States */
+.loading, .error {
+  text-align: center;
+  padding: 2rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.4rem;
+}
+
+.error {
+  color: #e74c3c;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .container {
+    padding: 1.5rem;
+  }
+
+  .container .top {
+    width: 95%;
+    padding: 2rem;
+    flex-direction: column;
+  }
+
+  .container .top .box1,
+  .container .top .box2 {
+    width: 100%;
+    min-height: 200px;
+  }
+
+  .container .bot,
+  .recommendations {
+    width: 95%;
+    padding: 2rem;
+  }
+
+  .crop-list {
+    grid-template-columns: 1fr;
+  }
+
+  .container .top .box1 h2,
+  .container .top .box2 h2,
+  .container .bot h2,
+  .recommendations h2 {
+    font-size: 2rem;
+  }
+
+  .container .top .box1 p,
+  .container .top .box2 p,
+  .container .bot .soil p {
+    font-size: 1.2rem;
+  }
 }
