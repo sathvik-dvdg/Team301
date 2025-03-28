@@ -1,8 +1,30 @@
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 import "../styles/Thirdpage.css";
 
 const ThirdPage = () => {
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const currentUser = localStorage.getItem('currentUser');
+        if (!currentUser) {
+            navigate('/login');
+        }
+    }, [navigate]);
+
+    useEffect(() => {
+        window.history.pushState(null, null, window.location.pathname);
+        const handlePopState = (e) => {
+            e.preventDefault();
+            window.history.pushState(null, null, window.location.pathname);
+        };
+
+        window.addEventListener('popstate', handlePopState);
+
+        return () => {
+            window.removeEventListener('popstate', handlePopState);
+        };
+    }, []);
 
     const scrollToContact = () => {
         document.querySelector('.footer-section.contact').scrollIntoView({
