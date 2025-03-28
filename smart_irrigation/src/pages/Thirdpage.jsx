@@ -1,8 +1,37 @@
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react"; // Add useState
 import "../styles/Thirdpage.css";
 
 const ThirdPage = () => {
     const navigate = useNavigate();
+    const [formData, setFormData] = useState({
+        location: "",
+        moisture: "",
+        ph: "",
+        nitrogen: "",
+        potassium: ""
+    });
+
+    // Add authentication check
+    useEffect(() => {
+        const currentUser = localStorage.getItem('currentUser');
+        if (!currentUser) {
+            navigate('/login');
+        }
+    }, [navigate]);
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        navigate("/second", { state: formData });
+    };
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
 
     const scrollToContact = () => {
         document.querySelector('.footer-section.contact').scrollIntoView({
@@ -27,59 +56,60 @@ const ThirdPage = () => {
                     </h2>
                     <span className="highlight">YOUR CITY</span>
                 </div>
-                <form>
-                    <input type="text" placeholder="Enter type of soil" />
-                    <input type="text" placeholder="Enter Ph Level" />
-                    <input type="text" placeholder="Enter Moisture (in %)" />
-                    <input type="text" placeholder="Enter Nitrogen level (kg/ha)" />
-                    <input type="text" placeholder="Enter Potassium (kg/ha)" />
-                    <button onClick={() => navigate("/second")}>
+                <form onSubmit={handleSubmit}>
+                    <div className="input-group">
+                        <input
+                            type="text"
+                            name="location"
+                            placeholder="Enter your location"
+                            value={formData.location}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <input
+                        type="text"
+                        name="moisture"
+                        placeholder="Enter Moisture (in %)"
+                        value={formData.moisture}
+                        onChange={handleChange}
+                        required
+                    />
+                    <input
+                        type="text"
+                        name="ph"
+                        placeholder="Enter Ph Level"
+                        value={formData.ph}
+                        onChange={handleChange}
+                        required
+                    />
+                    <input
+                        type="text"
+                        name="nitrogen"
+                        placeholder="Enter Nitrogen level (kg/ha)"
+                        value={formData.nitrogen}
+                        onChange={handleChange}
+                        required
+                    />
+                    <input
+                        type="text"
+                        name="potassium"
+                        placeholder="Enter Potassium (kg/ha)"
+                        value={formData.potassium}
+                        onChange={handleChange}
+                        required
+                    />
+                    <button type="submit">
                         View Report
                     </button>
                 </form>
 
                 <footer>
-                    <div className="footer-container">
-                        <div className="footer-section brand">
-                            <h2>SmartIrrigate</h2>
-                            <p>
-                                SmartIrrigate is an advanced agricultural insights platform that
-                                provides real-time data on soil fertility, temperature, rainfall
-                                probability, and drought risk. By leveraging AI-driven
-                                analytics, it helps farmers and agricultural professionals make
-                                informed irrigation and crop management decisions.
-                            </p>
-                        </div>
-                        <div className="footer-section contact">
-                            <h3>Contact Info</h3>
-                            <p>
-                                <strong>Office Address:</strong>
-                            </p>
-                            <p>
-                                CANARA ENGINEERING COLLEGE
-                                <br /> Sudheendra Nagar,
-                                <br /> Benjanapadavu, Bantwal Taluk,
-                                <br /> Mangalore, D.K. District,
-                                <br /> Karnataka, India - 574219
-                            </p>
-                            <p>
-                                <strong>Customer Service:</strong> +01 1234567890
-                            </p>
-                            <p>
-                                <strong>Email:</strong>{" "}
-                                <a href="mailto:contact@smartirrigate.com">
-                                    contact@smartirrigate.com
-                                </a>
-                            </p>
-                        </div>
-                    </div>
-                    <div className="footer-bottom">
-                        <p>© 2024 All Rights Reserved. Designed by HTML & CSS</p>
-                    </div>
+                    // ... existing footer code ...
                 </footer>
             </main>
         </div>
     );
 };
 
-export default ThirdPage; 
+export default ThirdPage;

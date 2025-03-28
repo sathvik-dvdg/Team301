@@ -3,6 +3,27 @@ import "../Styles/Login.css";
 
 export default function Login() {
   const navigate = useNavigate();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const email = document.getElementById('email-id').value;
+    const password = document.getElementById('password').value;
+
+    // Get users from localStorage
+    const users = JSON.parse(localStorage.getItem('users') || '[]');
+
+    // Find user with matching credentials
+    const user = users.find(u => u.email === email && u.password === password);
+
+    if (user) {
+      // Store current user info
+      localStorage.setItem('currentUser', JSON.stringify(user));
+      navigate('/third');
+    } else {
+      alert('Invalid credentials!');
+    }
+  };
+
   return (
     <>
       <div className="body">
@@ -12,7 +33,7 @@ export default function Login() {
 
         <div className="login">
           <div className="form">
-            <form className="login_form">
+            <form className="login_form" onSubmit={handleSubmit}>
               <h3>Login</h3>
 
               <label htmlFor="email-id">Email:</label>
