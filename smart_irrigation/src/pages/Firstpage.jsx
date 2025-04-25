@@ -1,18 +1,38 @@
 import { useNavigate } from "react-router-dom";
-import "../styles/Firstpage.css";
-import { useState } from "react";
+import "../Styles/Firstpage.css";
+import { useState, useEffect } from "react";
 
+import { getFirstPageData, getDashboardHistory, getFirstPageHistory } from "../api/api";
 const FirstPage = () => {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    location: "",
-    moisture: "",
-    ph: "",
-    nitrogen: "",
-    phosphorous: "",
-    potassium: ""
-  });
+  const [showHistory, setShowHistory] = useState(false);
+
   const [errors, setErrors] = useState({});
+  const [pageData, setPageData] = useState(null);
+  const [historyData, setHistoryData] = useState([]);
+  const [firstpageHistory, setFirstpageHistory] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getFirstPageData();
+      setPageData(data);
+    };
+    const fetchHistory = async () => {
+        const data = await getDashboardHistory();
+        setHistoryData(data);
+      };
+      const fetchFirstPageHistory = async () => {
+        const data = await getFirstPageHistory();
+        setFirstpageHistory(data);
+      }
+
+    fetchData();
+    fetchHistory();
+    fetchFirstPageHistory();
+  }, []); 
+
+
+
 
   const scrollToContact = () => {
     document.querySelector('.footer-section.contact').scrollIntoView({
@@ -20,68 +40,7 @@ const FirstPage = () => {
     });
   };
 
-  const validateForm = () => {
-    const newErrors = {};
-
-    if (!formData.location.trim()) {
-      newErrors.location = "Location is required";
-    }
-
-    if (!formData.moisture) {
-      newErrors.moisture = "Moisture level is required";
-    } else if (formData.moisture < 0 || formData.moisture > 100) {
-      newErrors.moisture = "Moisture must be between 0 and 100";
-    }
-
-    if (!formData.ph) {
-      newErrors.ph = "pH level is required";
-    } else if (formData.ph < 0 || formData.ph > 14) {
-      newErrors.ph = "pH must be between 0 and 14";
-    }
-
-    if (!formData.nitrogen) {
-      newErrors.nitrogen = "Nitrogen level is required";
-    } else if (formData.nitrogen < 0) {
-      newErrors.nitrogen = "Nitrogen cannot be negative";
-    }
-
-    if (!formData.phosphorous) {
-      newErrors.phosphorous = "Phosphorous level is required";
-    } else if (formData.phosphorous < 0) {
-      newErrors.phosphorous = "Phosphorous cannot be negative";
-    }
-
-    if (!formData.potassium) {
-      newErrors.potassium = "Potassium level is required";
-    } else if (formData.potassium < 0) {
-      newErrors.potassium = "Potassium cannot be negative";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (validateForm()) {
-      navigate("/second", { state: formData });
-    }
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-    // Clear error when user starts typing
-    if (errors[name]) {
-      setErrors(prev => ({
-        ...prev,
-        [name]: ""
-      }));
-    }
-  };
+ 
 
   return (
     <div>
@@ -93,6 +52,53 @@ const FirstPage = () => {
         <h1>Smart Irrigation System</h1>
       </header>
       <main>
+        {pageData && (
+          <div className="hero-info">
+            <h2>{pageData.message}</h2>
+            <img src={pageData.img} alt="Page" />
+            <p>
+              {pageData.description}
+            </p>
+          </div>
+        )}
+        <button onClick={() => setShowHistory(!showHistory)}>
+            {showHistory ? 'Show Data' : 'Show History'}
+          </button>
+        {showHistory ? (
+            <div className="history-section">
+            <h2>First Page History</h2>
+            <ul>
+              {firstpageHistory.map((item, index) => (
+                <li key={index}>
+                  <p><strong>Message:</strong> {item.message}</p>
+                  <p><strong>Description:</strong> {item.description}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+        ) : (
+            <div>
+                {pageData && (
+                  <div className="hero-info">
+                    <h2>{pageData.message}</h2>
+                    <img src={pageData.img} alt="Page" />
+                    <p>
+                      {pageData.description}
+                    </p>
+                  </div>
+                )}
+                  <div className="history-section">
+                  <h2>Dashboard History</h2>
+                  <ul>
+                    {historyData.map((item, index) => (
+                      <li key={index}>
+                        {item.name}: {item.water_level}
+                      </li>
+                    ))}
+                  </ul>
+                </div></div>
+        )}
         <div className="hero">
           <h2>
             Get Complete Agricultural Report – Fertility, Rainfall, <br />
@@ -100,98 +106,6 @@ const FirstPage = () => {
           </h2>
           <span className="highlight">YOUR CITY</span>
         </div>
-        <form onSubmit={handleSubmit}>
-          <div className="input-group">
-            <input
-              type="text"
-              name="location"
-              placeholder="Enter your location"
-              value={formData.location}
-              onChange={handleChange}
-              required
-            />
-            {errors.location && <span className="error">{errors.location}</span>}
-          </div>
-          <div className="soil-inputs">
-            <div className="input-group">
-              <label>Moisture Level (%)</label>
-              <input
-                type="number"
-                name="moisture"
-                min="0"
-                max="100"
-                step="0.1"
-                placeholder="Enter moisture level"
-                value={formData.moisture}
-                onChange={handleChange}
-                required
-              />
-              {errors.moisture && <span className="error">{errors.moisture}</span>}
-            </div>
-            <div className="input-group">
-              <label>pH Level (0-14)</label>
-              <input
-                type="number"
-                name="ph"
-                min="0"
-                max="14"
-                step="0.1"
-                placeholder="Enter pH level"
-                value={formData.ph}
-                onChange={handleChange}
-                required
-              />
-              {errors.ph && <span className="error">{errors.ph}</span>}
-            </div>
-            <div className="input-group">
-              <label>Potassium (kg/ha)</label>
-              <input
-                type="number"
-                name="potassium"
-                min="0"
-                step="0.1"
-                placeholder="Enter potassium level"
-                value={formData.potassium}
-                onChange={handleChange}
-                required
-              />
-              {errors.potassium && <span className="error">{errors.potassium}</span>}
-            </div>
-            <div className="input-group">
-              <label>Nitrogen (kg/ha)</label>
-              <input
-                type="number"
-                name="nitrogen"
-                min="0"
-                step="0.1"
-                placeholder="Enter nitrogen level"
-                value={formData.nitrogen}
-                onChange={handleChange}
-                required
-              />
-              {errors.nitrogen && <span className="error">{errors.nitrogen}</span>}
-            </div>
-            <div className="input-group">
-              <label>Phosphorous (kg/ha)</label>
-              <input
-                type="number"
-                name="phosphorous"
-                min="0"
-                step="0.1"
-                placeholder="Enter phosphorous level"
-                value={formData.phosphorous}
-                onChange={handleChange}
-                required
-              />
-              {errors.phosphorous && <span className="error">{errors.phosphorous}</span>}
-            </div>
-          </div>
-          <button type="submit">
-            View Report
-          </button>
-        </form>
-
-        {/* New Report Button */}
 
         <footer>
           <div className="footer-container">

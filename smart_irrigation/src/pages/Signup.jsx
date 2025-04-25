@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import "../Styles/Signup.css";
-
+import { useState } from "react";
 export default function Signup() {
   const navigate = useNavigate();
 
@@ -10,29 +10,29 @@ export default function Signup() {
     const lastName = document.getElementById('last-name').value;
     const email = document.getElementById('signup-email').value;
     const password = document.getElementById('signup-password').value;
-
-    // Create user object
-    const user = {
-      firstName,
-      lastName,
-      email,
-      password
-    };
-
-    // Get existing users or initialize empty array
-    const existingUsers = JSON.parse(localStorage.getItem('users') || '[]');
-
-    // Check if email already exists
-    if (existingUsers.some(u => u.email === email)) {
-      alert('Email already registered!');
-      return;
-    }
-
-    // Add new user
-    existingUsers.push(user);
-    localStorage.setItem('users', JSON.stringify(existingUsers));
-    alert('Registration successful!');
-    navigate('/login');
+    const username = `${firstName} ${lastName}`
+    fetch('http://localhost:3000/signup', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({username, password })
+    })
+    .then(response => {
+        if (response.ok) {
+            alert('Signup successful!');
+            navigate('/login');
+        } else {
+            response.text().then(text => {
+                alert(text);
+            });
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred during signup.');
+    });
+    
   };
 
   return (
@@ -74,9 +74,9 @@ export default function Signup() {
           />
 
           {/* Navigation button to Login */}
-          <button type="button" onClick={() => navigate("/login")}>
+            <button type="button"  onClick={() => navigate("/login")}>
             Already have an account? Login
-          </button>
+            </button> 
 
           <div className="submit">
             <button type="submit" className="btn btn-primary">

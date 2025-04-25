@@ -1,177 +1,221 @@
-import "../Styles/Secondpage.css";
-import { useLocation } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { cropData } from "../data/cropData";
+// This file manages communication with the backend API.
 
-export default function Secondpage() {
-  const location = useLocation();
-  const formData = location.state || {};
-  const [recommendedCrops, setRecommendedCrops] = useState([]);
-  const [weatherData, setWeatherData] = useState({
-    currentTemp: null,
-    avgTemp: null,
-    loading: true,
-    error: null
-  });
+/**
+ * Fetches data from the /dashboard route of the backend API.
+ * @returns {Promise<any>} A promise that resolves with the data from the /dashboard route, or rejects with an error.
+ */
+const getDashboardData = async () => {
+  try {
+    // Make a GET request to the /dashboard route.
+    const response = await fetch('http://localhost:3000/dashboard/');
 
-  useEffect(() => {
-    const fetchWeatherData = async () => {
-      try {
-        const API_KEY = '2ea24c536580475a98731102252803';
-        const city = formData.location;
-
-        // Fetch current weather and forecast in one call
-        const response = await fetch(
-          `https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${city}&days=5&aqi=no`
-        );
-        const data = await response.json();
-
-        if (data.error) {
-          throw new Error(data.error.message || 'Failed to fetch weather data');
-        }
-
-        // Get current temperature
-        const currentTemp = data.current.temp_c;
-
-        // Calculate average temperature from forecast
-        const avgTemperature = data.forecast.forecastday.reduce((sum, day) => {
-          return sum + day.day.avgtemp_c;
-        }, 0) / data.forecast.forecastday.length;
-
-        setWeatherData({
-          currentTemp: Math.round(currentTemp),
-          avgTemp: Math.round(avgTemperature),
-          loading: false,
-          error: null
-        });
-
-        // Calculate recommendations with actual temperature
-        const recommendations = findRecommendedCrops(formData, currentTemp);
-        setRecommendedCrops(recommendations);
-
-      } catch (error) {
-        console.error("Error fetching weather data:", error);
-        setWeatherData({
-          currentTemp: null,
-          avgTemp: null,
-          loading: false,
-          error: `Failed to fetch weather data: ${error.message}`
-        });
-      }
-    };
-
-    if (formData.location) {
-      fetchWeatherData();
+    // Check if the request was successful (status code 200-299).
+    if (!response.ok) {
+      // If not, throw an error with the status code and status text.
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
-  }, [formData]);
+
+    // Parse the JSON response body.
+    const data = await response.json();
+
+    // Return the data.
+    return data;
+  } catch (error) {
+    // Handle any errors that occurred during the fetch operation.
+    console.error('Error fetching dashboard data:', error);
+    throw error; // Re-throw the error to be handled by the caller.
+  }
+};
+
+/**
+ * Fetches historical data from the /dashboard-history route of the backend API.
+ * @returns {Promise<any>} A promise that resolves with the historical data from the /dashboard-history route, or rejects with an error.
+ */
+const getDashboardHistoryData = async () => {
+  try {
+    // Make a GET request to the /dashboard-history route.
+    const response = await fetch('http://localhost:3000/dashboard-history/');
+
+    // Check if the request was successful (status code 200-299).
+    if (!response.ok) {
+      // If not, throw an error with the status code and status text.
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    // Parse the JSON response body.
+    const data = await response.json();
+
+    // Return the data.
+    return data;
+  } catch (error) {
+    // Handle any errors that occurred during the fetch operation.
+    console.error('Error fetching dashboard history data:', error);
+    throw error; // Re-throw the error to be handled by the caller.
+  }
+};
+
+/**
+ * Fetches data from the /firstpage route of the backend API.
+ * @returns {Promise<any>} A promise that resolves with the data from the /firstpage route, or rejects with an error.
+ */
+const getFirstPageData = async () => {
+  try {
+    // Make a GET request to the /firstpage route.
+    const response = await fetch('http://localhost:3000/firstpage/');
+
+    // Check if the request was successful (status code 200-299).
+    if (!response.ok) {
+      // If not, throw an error with the status code and status text.
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    // Parse the JSON response body.
+    const data = await response.json();
+
+    // Return the data.
+    return data;
+  } catch (error) {
+    // Handle any errors that occurred during the fetch operation.
+    console.error('Error fetching first page data:', error);
+    throw error; // Re-throw the error to be handled by the caller.
+  }
+};
+
+/**
+ * Fetches historical data from the /firstpage-history route of the backend API.
+ * @returns {Promise<any>} A promise that resolves with the historical data from the /firstpage-history route, or rejects with an error.
+ */
+const getFirstPageHistory = async () => {
+  try {
+    // Make a GET request to the /firstpage-history route.
+    const response = await fetch('http://localhost:3000/firstpage-history/');
+
+    // Check if the request was successful (status code 200-299).
+    if (!response.ok) {
+      // If not, throw an error with the status code and status text.
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    // Parse the JSON response body.
+    const data = await response.json();
+
+    // Return the data.
+    return data;
+  } catch (error) {
+    // Handle any errors that occurred during the fetch operation.
+    console.error('Error fetching first page history data:', error);
+    throw error; // Re-throw the error to be handled by the caller.
+  }
+};
 
 
-  const findRecommendedCrops = (soilData, temperature) => {
-    return cropData
-      .map(crop => {
-        const moistureMatch = isInRange(soilData.moisture, crop.moisture.min, crop.moisture.max);
-        const phMatch = isInRange(soilData.ph, crop.ph.min, crop.ph.max);
-        const nitrogenMatch = isInRange(soilData.nitrogen, crop.nitrogen.min, crop.nitrogen.max);
-        const phosphorousMatch = isInRange(soilData.phosphorous, crop.phosphorous.min, crop.phosphorous.max);
-        const potassiumMatch = isInRange(soilData.potassium, crop.potassium.min, crop.potassium.max);
-        const temperatureMatch = isInRange(temperature, crop.temperature.min, crop.temperature.max);
 
-        const accuracy = (
-          (moistureMatch + phMatch + nitrogenMatch + phosphorousMatch + potassiumMatch + temperatureMatch) / 6
-        ) * 100;
+/**
+ * Fetches data from the /secondpage route of the backend API.
+ * @returns {Promise<any>} A promise that resolves with the data from the /secondpage route, or rejects with an error.
+ */
+const getSecondPageData = async () => {
+  try {
+    // Make a GET request to the /secondpage route.
+    const response = await fetch('http://localhost:3000/secondpage/');
 
-        return {
-          ...crop,
-          accuracy: Math.round(accuracy)
-        };
-      })
-      .filter(crop => crop.accuracy >= 30)
-      .sort((a, b) => b.accuracy - a.accuracy)
-      .slice(0, 3);
+    // Check if the request was successful (status code 200-299).
+    if (!response.ok) {
+      // If not, throw an error with the status code and status text.
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    // Parse the JSON response body.
+    const data = await response.json();
+
+    // Return the data.
+    return data;
+  } catch (error) {
+    // Handle any errors that occurred during the fetch operation.
+    console.error('Error fetching second page data:', error);
+    throw error; // Re-throw the error to be handled by the caller.
+  }
+};
+
+/**
+ * Fetches historical data from the /secondpage-history route of the backend API.
+ * @returns {Promise<any>} A promise that resolves with the historical data from the /secondpage-history route, or rejects with an error.
+ */
+const getSecondPageHistory = async () => {
+    try {
+      // Make a GET request to the /secondpage-history route.
+      const response = await fetch('http://localhost:3000/secondpage-history/');
+  
+      // Check if the request was successful (status code 200-299).
+      if (!response.ok) {
+        // If not, throw an error with the status code and status text.
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      // Parse the JSON response body.
+      const data = await response.json();
+  
+      // Return the data.
+      return data;
+    } catch (error) {
+      // Handle any errors that occurred during the fetch operation.
+      console.error('Error fetching second page history data:', error);
+      throw error; // Re-throw the error to be handled by the caller.
+    }
   };
 
-  const isInRange = (value, min, max) => {
-    const numValue = Number(value);
-    return numValue >= min && numValue <= max ? 1 : 0;
-  };
 
-  return (
-    <div className="second-page">
-      <div className="container">
-        <div className="top">
-          <div className="box1">
-            <h2>Location Details</h2>
-            <p>Location: {formData.location || "Not specified"}</p>
-          </div>
-          <div className="box2">
-            <h2>Temperature</h2>
-            {weatherData.loading ? (
-              <p>Loading temperature data...</p>
-            ) : weatherData.error ? (
-              <p className="error">{weatherData.error}</p>
-            ) : (
-              <>
-                <p>Current Temperature: {weatherData.currentTemp}°C</p>
-                <p> Average: {weatherData.avgTemp}°C</p>
-              </>
-            )}
-          </div>
-        </div>
+/**
+ * Fetches data from the /thirdpage route of the backend API.
+ * @returns {Promise<any>} A promise that resolves with the data from the /thirdpage route, or rejects with an error.
+ */
+const getThirdPageData = async () => {
+  try {
+    // Make a GET request to the /thirdpage route.
+    const response = await fetch('http://localhost:3000/thirdpage/');
 
-        <div className="bot">
-          <h2>Soil Information</h2>
-          <div className="soil">
-            <p>Soil moisture:</p>
-            <p>{formData.moisture}%</p>
-          </div>
-          <div className="soil">
-            <p>pH level:</p>
-            <p>{formData.ph}</p>
-          </div>
-          <div className="soil">
-            <p>Nitrogen Content:</p>
-            <p>{formData.nitrogen} kg/ha</p>
-          </div>
-          <div className="soil">
-            <p>Phosphorous Content:</p>
-            <p>{formData.phosphorous} kg/ha</p>
-          </div>
-          <div className="soil">
-            <p>Potassium Content:</p>
-            <p>{formData.potassium} kg/ha</p>
-          </div>
-        </div>
+    // Check if the request was successful (status code 200-299).
+    if (!response.ok) {
+      // If not, throw an error with the status code and status text.
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
 
-        <div className="recommendations">
-          <h2>Best Crops for Your Soil</h2>
-          {weatherData.loading ? (
-            <div className="loading">Loading recommendations...</div>
-          ) : recommendedCrops.length > 0 ? (
-            <div className="crop-list">
-              {recommendedCrops.map((crop, index) => (
-                <div key={index} className="crop-card">
-                  <h3>{crop.name}</h3>
-                  <p>{crop.description}</p>
-                  <div className="crop-requirements">
-                    <p>Required Conditions:</p>
-                    <ul>
-                      <li>Moisture: {crop.moisture.min}% - {crop.moisture.max}%</li>
-                      <li>pH: {crop.ph.min} - {crop.ph.max}</li>
-                      <li>Temperature: {crop.temperature.min}°C - {crop.temperature.max}°C</li>
-                      <li>Nitrogen: {crop.nitrogen.min} - {crop.nitrogen.max} kg/ha</li>
-                      <li>Phosphorous: {crop.phosphorous.min} - {crop.phosphorous.max} kg/ha</li>
-                      <li>Potassium: {crop.potassium.min} - {crop.potassium.max} kg/ha</li>
-                    </ul>
-                    {/* <p className="accuracy">Match Accuracy: {crop.accuracy}%</p> */}
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="no-crops">No crop recommendations available for the given conditions.</div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
+    // Parse the JSON response body.
+    const data = await response.json();
+
+    // Return the data.
+    return data;
+  } catch (error) {
+    // Handle any errors that occurred during the fetch operation.
+    console.error('Error fetching third page data:', error);
+    throw error; // Re-throw the error to be handled by the caller.
+  }
+};
+/**
+ * Fetches historical data from the /thirdpage-history route of the backend API.
+ * @returns {Promise<any>} A promise that resolves with the historical data from the /thirdpage-history route, or rejects with an error.
+ */
+const getThirdPageHistory = async () => {
+  try {
+    // Make a GET request to the /thirdpage-history route.
+    const response = await fetch('http://localhost:3000/thirdpage-history/');
+
+    // Check if the request was successful (status code 200-299).
+    if (!response.ok) {
+      // If not, throw an error with the status code and status text.
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    // Parse the JSON response body.
+    const data = await response.json();
+
+    // Return the data.
+    return data;
+  } catch (error) {
+    // Handle any errors that occurred during the fetch operation.
+    console.error('Error fetching third page history data:', error);
+    throw error; // Re-throw the error to be handled by the caller.
+  }
+};
+// Export the functions so they can be used in other parts of the frontend.
+export { getDashboardData, getFirstPageData, getSecondPageData, getThirdPageData, getDashboardHistoryData, getFirstPageHistory, getSecondPageHistory, getThirdPageHistory };

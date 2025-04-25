@@ -1,7 +1,9 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate} from 'react-router-dom';
 import '../Styles/Dashboard.css';
+import { getDashboardData } from '../api/api';
+import { useEffect, useState } from 'react';
 
-const Dashboard = () => {
+const Dashboard = () => {  
     const navigate = useNavigate();
     // Get current user from localStorage
     const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
@@ -12,9 +14,24 @@ const Dashboard = () => {
     const handleLogout = () => {
         // Clear the currentUser from localStorage
         localStorage.removeItem('currentUser');
-        // Navigate to the first page
+        // Navigate to the home page
         navigate('/');
     };
+    const [dashboardData, setDashboardData] = useState([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+          try {
+            const data = await getDashboardData();
+            setDashboardData(data);
+          } catch (error) {
+            console.error('Error fetching dashboard data:', error);
+          }
+        };
+    
+        fetchData();
+      }, []);
+
 
     return (
         <div className="dashboard-container">
@@ -23,7 +40,7 @@ const Dashboard = () => {
                 <h1>Smart Irrigation System</h1>
             </header>
             <main className="dashboard-main">
-                <div className="dashboard-card">
+                <div className="dashboard-card profile">
                     <Link to="/profile" title="View Profile">
                         <div className="dashboard-profile-img">
                             <img
@@ -46,6 +63,20 @@ const Dashboard = () => {
                         Logout
                     </button>
                 </div>
+                <div className="dashboard-cards">
+                {dashboardData.map((item, index) => (
+                  <div key={index} className="dashboard-card">
+                    <div className="dashboard-card-content">
+                      <h2>{item.name}</h2>
+                      <p>
+                        <strong>Water Level:</strong>
+                        {item.water_level}%
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
             </main>
         </div>
     );
